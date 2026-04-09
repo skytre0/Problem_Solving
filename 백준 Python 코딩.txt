@@ -1,0 +1,99 @@
+차후 검토 필요 : 단계별(2-3, )
++ 백준 기본 지원만 사용 가능 = numpy 등 import는 사용 불가
+
+ int(sys.stdin.readline()), sys.stdin.readline().split() 이렇게 해도 문제 없음. (import sys)
++ 참고로 이름이 길어서 input = sys.stdin.readline을 맨 처음에 함으로써 쓸 수 있음
++ 문자열을 저장하고 싶을 경우 .rstrip()을 추가
++ 여러 줄 한번에 읽고 싶은 경우 : open(0) -> 한 줄 = 숫자 1개
++ open(0).read().split() -> 한 줄에 여러 숫자 + 나누고 싶으면) 사용.
++ sys, 반복문 개수 감소, { }이용, 함수로 만들면 소모 시간 감소 가능
+
+1번 문제
+A, B = map(int, input().split())
+print(A+B)
+
+-> map() : (변경할 형태(int 등), 변경할 요소), 이거는 변수 개수 = 띄어쓰기로 나눠진 개수. 
+-> split() : enter 없이 한번에 입력된 내용 띄어쓰기 기준으로 분리(변수 개수와 나눠진 개수 일치 -> 그냥 나오고, 변수 1개에 여러 개 나눠지면 list로 묶어서 내보냄)
++ a, b = map(int, input()[::-1].split()) 이 방식은 map 빠져나오기 전 일종의 중립 상태로 int는 str과 달리 [::-1] 이거를 못하지만 이러면 가능한 일종의 편법.
+
+2번 문제
+A, B = map(int, input().split())
+
+if A >= 1 and B <= 10000:
+  print(A+B,'\n',A-B,'\n',A*B,'\n',A//B,'\n',A%B, sep='') # 그냥 \n은 ' ' 발생으로 없애기 위해 sep 사용함, 아니면 각각 print 5개 만들면 됨
+
+3번 문제
+print(['><'[a<b],'=='][a==b])
+
+-> 리스트 컴프리헨션으로 [] 안에 조건문 입력 가능 방법
+
+4번 문제
+a,b,=sorted(map(str,input().split()))		# 글자 수 줄이게 str
+
+-> sorted의 () 안의 데이터 작음 -> 높음 순서로 정렬, key 사용해서 정렬 순서 규칙 조작 가능.
+
+5번 문제
+try, except : except는 에러가 발생한 경우에만 이동, 원하는 값 아니더라도 에러가 아니면 이동 불가능, except는 여러 개 작성 가능(각 에러 지정 가능 의미)
+
+6번 문제
+for i in range(len(a)):
+  if a[i] < x:
+    print(num[i], end = " ")
+여기서 print에 있는 end로 인해 이전 print와 다음 print를 " "를 사이에 두고 연속해서 출력되기에 출력은 최종 결과 1개만 나옴
++ 리스트의 [] 없애고 출력하고 싶으면 리스트 = a일 때 -> print(*a)하기
+
+7번 문제
+리스트 내부 교환 : a[0], a[1] = a[1], a[0], 리스트 생성 : list(range(1,10)) / [range]는 X
++ for _ in range(k): -> 이러면 반복할 때 변수(원래 i) 신경 X
+
+8번 문제
+k[a-1:b] = k[a-1:b][::-1] -> k 리스트 안 a-1~b 사이 내용을 역순([::-1])으로 변경 ([::-1]가 처음~끝으로 ::, -1은 역순 의미)
+
+9번 문제
+for i, n in zip(a, range(len(a)): -> 이걸로 zip 안의 요소들만큼의 변수 생성 가능
++ for i, n in enumerate(a): -> 이거는 i=range(0, len(a)-1), n = a[0]~[len(a)-1] 할당
+
+10번 문제
+sys.stdin.readline() -> 줄이 "Hello"일 경우 "Hello\n"으로 판단해서 눈으로 봤을 때와 동일하려면 sys.stdin.readline().rstrip() 해줘야 함.
+
+11번 문제
+sorted(n, key=n.find) -> 먼저 나온 순서대로 나열 + 같은 거끼리 묶음 : (christmas -> chrisstma 로 뒤에 있는 s를 이전에 나온 s 뒤로 옮김 + list로.)
++ max(n, key=int)로 하면 list인 n의 요소 int로 해석해서 max를 찾음 (=str을 변환)
+
+12번 문제
+_ 는 1개 무시, *_ 는 여러 개 무시 : _, a, b하면 3개 대상. *_, ,a b하면 3개 +a 무시 가능, *a 모양은 여러 개 a 하나에 집어넣는다는 의미.
++ *a, = range(n): 하면 a=list로 range 안 숫자 넣음([*a] = *a,) 
+
+13번 문제
+while 1: -> 참인 경우 의미 (0 이외 숫자 = 참, while 나가려면 break 사용해야 함.)
+
+14번 문제
+시간 복잡도 : 반복문 range(n) 개당 O(n) -> 이중이면 n^2. 반복문 없으면 O(1) -> 상수항 위치 의미.
+
+15번 문제
+%g로 숫자 표현 -> 쓸모없는 소숫점 아래 0000 모두 제거 가능.
+
+16번 문제
+print(*sorted(a)) 모양이면 list인 a 안 요소들을 분리해서 각각 출력 가능.
+
+17번 문제
+sort = 기존 변수 자체 변경, sorted = 새로운 변수 만들어서 거기에 입력.  key=lambda x: (x[0],x[1]) 처럼 2중 list 안에서도 세분화 가능.
++ set(sorted(x)) 하면 sorted가 날라가서 sorted(list(set(x))) 순서로 해야 함.
++ 반대 방향의 경우 key에 reverse=True를 쓰든지, 앞에 '-' 붙이기.
+-> key=lambda x: (-int(x[1]), int(x[2])) -> x[1]은 내림차순, x[2]는 오름차순
+
+18번 문제
+시간 복잡도(범위가 막 -1억~+1억) 으로 index를 사용하지 못하는 경우 -> 필요한 것만 특정지을 수 있으면 dictionary{입력하면 : 출력됨} 사용도 방법.
++ list는 앞에서부터 하나하나 찾지만 dict/set({ })는 해당 이름의 고유값을 찾아서 더 빠름(해시 테이블).
+
+19번 문제
+dictionary는 sorted 가능, set는 불가능. 그냥 { }하면 dict로 인식, 앞에 set() 필요함.
+
+20번 문제
+for ~ else문 가능 : for 중간에 break가 되지 않고 for문 모두 실행 성공하면 else가 실행되는 구조. (while ~ else도 동일)
+
+21번 문제
+def 이용하면 지역 변수가 돼서 시간 소모 감소, 아니면 전역 변수가 돼서 시간이 오래 걸림.
+
+22번 문제
+스택 문제의 경우 list로만 pop을 해서 시간 초과가 될 경우 'deque()' 사용 가능하면 쓰기 -> list의 pop은 O(n), deque는 O(1)로 pop 속도 차이가 큼.

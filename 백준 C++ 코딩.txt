@@ -1,0 +1,202 @@
+* solved.ac 점수 상위 100문제의 가장 낮은 등급보다 높아야 점수 주는 듯.
+* cin, cout, endl의 경우 # include <iostream> 필요, 속도는 scanf, printf보다 느리지만, 얘네는 입력/출력의 type을 지정 안 해도 된다는 장점 존재. -> 얘네가 속도 느린 이유 실행마다 flush() 함수로 버퍼를 지우기 때문에
+* 'cin >> ' 형태로 cin 오른쪽에 입력 받은 변수 존재, 'cout << '로 cout 오른쪽에서 왼쪽으로 출력할 내용 순서대로 옴 (마지막에 endl)
+* #include<bits/stdc++.h> 로 모든 라이브러리 불러올 수 있지만, 그 대신 계산 시간 증가 등의 단점 존재함.
+* C++을 사용하고 있고 cin/cout을 사용하고자 한다면, cin.tie(NULL);과 ios::sync_with_stdio(false);를 둘 다 적용하고, endl 대신 개행문자(\n)를 쓰자. 단, 이렇게 하면 scanf/printf/puts/getchar/putchar 등 C의 입출력 방식을 "같이" 사용 불가능해짐 -> 소수점 정확도 같은 경우 그냥 cout 안 쓰고 printf만 사용하면 됨.
+* competitive programing helper -> xxx.cpp 해야 작동함 (xxx.cc)는 작동 안 함.
+* #pragma GCC optimize("O3"), #pragma GCC optimize("Ofast"), #pragma GCC optimize("unroll-loops") -> 이것들도 시간 단축용으로 사용 (앞 Oxx는 default compiler 변경), 만능은 아님(15681번 사용하니까 늘어나는 경우도 발생함).
+* for(register int i) -> main memory 대신 register에 강제 할당
+
++ #import 는 C++ 표준이 아니며, gcc 와 MSVC 에서 사용하는 의미가 전혀 다름, gcc 에서의 #import 는 같은 파일을 최대 한 번만 포함하라는 의미. 하지만 C/C++ 표준 헤더 파일은 이미 여러번 포함해도 오류가 나지 않도록 구성했기 때문에, 굳이 표준이 아닌 #import 를 사용해야 할 필요는 없음.
+MSVC 에서의 #import 는 형식 라이브러리 (type library) 를 불러오라는 의미입니다. COM 객체를 사용하는 것이 주 목적입니다. 형식 라이브러리와 전혀 관계 없는 <iostream> 에 #import 를 사용하면 당연히 컴파일 오류가 발생함. BOJ 에서는 gcc 를 쓰기 때문에 #include 대신 #import 를 사용해도 정상적으로 컴파일이 되지만, #import 의 사용은 별로 추천 안 함 -> 숏코딩 글자 줄이려고 include는 7글자.
++ switch + enum 같이 사용 좋음. '\' 하고 enter 하면 줄 바꿔도 계속 같은 내용 작성 의미
++ kmp 알고리즘 -> 숫자 저장 = 지금까지 최대 n개 일치 -> 다음 차례 -> 또 일치하면 그냥 +1, 아니면 직전 숫자 의미 = 앞 n개 일치 = 앞 n번째에서 최대 일치만큼 상황에서 바로 비교가 1칸 당겨서 다시 비교보다 효율적 -> greedy 느낌으로 앞 n번째 상황일 때 최대 m개 일치 = best -> 이 상황에서 try가 효율적 -> index=길이-1 감안 이동. -> 실패 함수 제작 후 실제 비교 상황에서 해당 index로 바로 이동해서 비교하면 됨.
+
+* vscode 상단 -> terminal -> configure default... -> tasks.json에서 -std=c++17 적은 거 덕분에 c++17이 default로 컴파일, 없으면 c++14가 default가 됨...
+
+* 배운 알고리즘 -> 
+1. DFS(깊이 우선 탐색), BFS(너비 우선 탐색). 
+2. greedy(매 순간 최선 = 결과 최선). DP(중복/같은 문제 기존 값 이용 해결 -> 배낭 문제). KMP(문자열 n+m번 만에 비교/분석). 
+3. 다익스트라(한 정점 다른 모든 정점 최단거리). 플로이드-와샬(모든 정점, 다른 모든 정점 이동 최단 거리 - 다익스트라 유사, for문 3중 (거쳐가는 점, 시작점, 종점 i, j, k로 3중=V^3)). 
++) 벨만-포드(한 정점 최단 거리 -> 본인 위치만 0으로 잡아서, 하지만 다익스트라와 다른 점 그래프에서 음수 간선 존재 - 초기값 MAX - 모든 노드(V) 횟수만큼 모든 간선(E) 이동 실시=V*E 시간복잡도(각 노드마다 자기만 연결된 간선 실행이 아님 주의 = 그냥 for node 안 for vertex 수행 느낌) -> 음수 간선 순환 파악 가능). 
++) 프림 알고리즘 (최소 스패닝 트리 -> 각 노드 최단 거리 (다익스트라는 한 노드에서 다른 모든 노드 최단 거리, 이건 각 노드끼리의 최단 거리 느낌) -> 다익스트라는 시작점에서 누적이지만, 프림은 누적이 아님)
+4. 분할_정복(분할_정복: a % 2를 이용하며 하위 단계로 약화해서 결과 얻어서 상위 단계에 반영 + 반복_제곱법 : 분할_정복의 a % 2와 대응하게 숫자를 이진수 변환해서 default는 제곱하는 중에, 숫자 이진수 변환이 1이면(a%2==1) 결과에 추가 반영). 
++) merge sort(병합 정렬)이 여기에 해당함.
+
+* 사용 공식 : 신발끈 공식(2차원 다각형 넓이 : 벡터 이용해서 알아서 볼록/오목의 +/-도 판별됨), CCW(counter clockwise : 두 선분 교차 여부 판별용)
+
+* 자료 저장 종류 : array(크기 지정), vector(LIFO), queue(FIFO), stack(LIFO), priority_queue(FIFO, 배열 순서 있음), deque(양방향 in/out 가능), map(key, value 존재), set(자동 정렬, 중복 불가), multiset(정렬, 중복 가능), unordered_set(정렬 X) 등 존재
+
+이해 실패 : 1799(33664680)-이분 매칭+헝가리안 알고리즘(dfs), 
+
+
+1번 문제 : 
+(j<i ? " " : "*") -> if j < i; " " else "*"를 의미함 (?, : 가)
++) 위 예시처럼 간단한 거 비교는 ? 사용이 더 빠름.
+
+2번 문제 : 
+&& = and, || = or 의미함. ~숫자=0(False)로 비트 단위 NOT 의미, 
+
+3번 문제 : 
+#include <algorithm> -> 이거 하면 sort(n+i, n+a) 가능, n+i는 배열 n의 시작점(n[i]), n+a는 n+a까지, sort할 종류 여러 개면 stable_sort() 이용.
++ reverse(n, n+a) 역시 동일한 느낌.
+4번 문제 : 
+endl 속도 느림 -> \n 사용이 좋음 (flush 속도 느려서), scanf, printf 사용 -> C++은 cin, cout. 하지만 속도 느림. using namespace std; ios_base::sync_with_stdio(false); -> 입출력 무작위(scanf), cin.tie(NULL);, cout.tie(NULL); 2개 쓰면 scanf 못 씀.
+
+5번 문제:
+C언어는 a = {1,2,3} 이면 a[-1]=3이 파이썬과 달리 불가능함([ ] 안에 음수 불가능) 그래서, int len = sizeof(array) / sizeof(type_of_array) -1 방식 이용 필요함.
+
+6번 문제 : 
+printf("%s", a>b? ">" : b>a? "<" : "=="); -> ?로 참/거짓 나누고, :기준 앞이 참, 뒤가 거짓 의미.	
+
+7번 문제 : 
+scanf("%d", &a[i]); 해야 함, 아니면 scanf("%d", a+i);를 하든지 -> a = 배열
+
+8번 문제 : 
+cin >> a >> b; 로 a, b 공백, enter 이용해서 동시 입력 가능, cout << a << b하면 a, b  사이 공백없이 바로 입력, 아스키 코드로 바꾸려면 int인 대상에 static_cast<char>(변수_이름) 하면 됨 -> 대상의 type을 char로 바꾼다는 의미.
+
+9번 문제 : 
+array를 만든 함수 안에 넣는 경우 (type * 이름)으로 적어야 함 -> array는 사실상 반쯤은 주소라서
+
+10번 문제 : 
+C 언어 몫만 구하는 방법 정수끼리 '/' 하면 나머지는 버리고 몫만 자동으로 나옴 (실수가 섞이면 0.xxx 모양으로 나오지만)
+
+11번 문제 : 
+scanf에서 반환값 있어서 여기서도 EOF 확인 가능.
+-> cin.eof()로 확인도 가능함 (return true / false로 반환) -> 이거는 실제로 실패해야 되고, 읽을 내용 없지만 실패 안 한 경우는 eof에 위치하더라도 false 주의. 그냥 while (cin >> a) 하면 알아서 eof 오면 끝남.
+
+12번 문제 : 
+C에서는 Python과 달리 'a b c' 처럼 공백으로 나눈 입력을 split() 없이 for문 해서 읽는 거 반복 가능 (cin, scanf 둘 다) -> scanf %ns로 n개씩 쪼개서 읽기 가능.
+-> 공백 포함 문자열 읽으려면 getline(cin, 변수_이름) 하면 됨. -> 몇 개나 입력이 올 지 모르는 상황에 사용 가능.
+
+13번 문제 : 
+변수 2개 서로 바꾸려면 Python과 달리 다른 변수 설정해서 거기에 1개 저장하고 옮기는 방식으로 해야 함. -> ex) k=temp[i]; temp[i]=temp[j]; temp[j]=k
+
+14번 문제 : 
+a.insert() 모양으로 문자열, 집합(set)에 추가 가능. 
+* 이외에도 unordered_set, multiset 존재.
++ 집합은 #include <set>, std::set<int> set_name; 으로 제작함. set_name.size() 로 안의 개수도 확인 가능.
+
+15번 문제 : 
+while(std::cin>>x)로 x에 입력 들어올 때까지 하는 걸로 인식 -> 백준 문제 풀이에서 사용, 실전에서 쓰려면 입력하고 싶은 내용 전부 입력했으면 마지막에 '\0' 입력하면 되기는 함 (이유는 아무것도 안 적고 enter 눌러도 계속 진행되기 때문에).
++) while (scanf("%d", &n) != EOF) 이거도 같은 방식 -> 12번에 활용 있음.
++) for 대신 while 사용 유사하게 for (int i = 0, j = x k = 3; ; i++) 처럼 초기값 여러 개 설정 가능.
+
+16번 문제 : 
+2개 요소 동시에 다룰 때 "pair<type, type> 이름[배열 크기]"; 이용 -> 이름.first(), 이름.second() 로 접근 가능. pair는 vector, algorithm에 포함되어 있음. 사용 시 주의사항은 pair<int, int> a; if (a == {0, 0})하면 에러가 발생하고, if (a = make_pair(0, 0))으로 해야 함.
+* 3개 '이상'의 경우 tuple을 사용하면 됨. (사실 pair<int, pair<int, int>>처럼도 되기는 하지만 번거로움.)
+* 구조체(struct) 사용하면 스스로 제작 가능하지만 번거로움
++) make_pair(a, b)로 한번에 .first, .second 지정 가능.
++) tuple은 make_tuple(a, b, c...), 호출은 get<0>(tuple_이름) 으로 해당 위치(0번째) 가져옴 -> 이거 말고 그냥 struct ss {int a, int b, int c} 처럼 해도 사실상 같음.
+
+17번 문제 : 
+vector 순서 정해져 있고 사용법 "vector 이름(size);", set의 경우 python과 달리 무작위가 아닌 내부적으로 정렬(sort)되어 있음. 여기도 queue 있음. vector 장점은 array와 달리 크기를 유동적으로 변경 가능. vector 도 .size()로 크기 측정 가능.
+-> 둘 다 #include <vector>, #include <set> 해야 함.
+-> set은 내부적 sort 상태, auto it = s.upper_bound(target) 형태 가능하지만, vector처럼 linear하지 않아서 *it로 값 접근해야 함 (당연히 s[i]도 안 됨) + auto = std::set<type>::iterator
++) vector는 upper_bound(begin, end, target) 임 (자동 sort 아니라서)
+
+18번 문제 : 
+중복된 요소들 고르기 위해서는 unique() 이용, 제거하려면 erase() 이용. -> set나 vector에서 가능.
+
+19번 문제 : 
+#include <map> 쓰면 map<type, type> 이름; 으로 Python의 dict와 거의 비슷함.
+
+20번 문제 : 
+C는 Python과 달리 a==b==c가 안 되고, a==b && b==c 로 and 이용해서 나눠야 함.
+
+21번 문제 : 
+*여러 변수 변경 관련 내용*
+void 함수는 return값이 없음, 그리고 함수 외부와는 별개로 작동해서 void 안에 a = a+b가 있어도 함수 외부 값은 변동이 없음.
+-> 하지만! 만약 void xxxx(int* a, int*b) 를 이용해서 a, b에 포인터로 전달하면 void 안에서도 외부의 변수 값 변경 가능 -> *a = *a + *b 하면 외부에 있던 a가 변경이 됨 -> 이건 일종의 변수만 오면 void는 copy를 만들어서 실행하는 느낌이지만, 주소가 오면 원본을 가지고 실행하는 느낌으로 이해.
++ (int* a, int*b) -> 이 예시의 경우 int a, b로 배열 X라서 입력할 때 &a, &b로 적어야 함, 배열은 이름 = 주소 느낌이라 그냥 (a, b)하면 배열[0]의 주소가 와서 배열은 a[0] = a[0] + b[0]만 해도 a[0] 값이 void 벗어나도 바뀐 상태로 유지가 됨. (9번과 연관.)
++ int& c = a는 call by reference로 c가 a의 별칭으로 a의 값을 가리키면서(c == a), 함수에 int* a; *a = 10처럼 힘들게 원본 값 바꾸는 대신 int& c; c = 10처럼 쉽게 바꿀 수 있음 (c가 a와 같은 것을 가리키는 느낌이라서 가능, 함수도 복사본이 아닌 원본을 넣어서 메모리 소모량 증가 아님), 단 reference는 무조건 1개 가리켜야 하고 변경 불가.
++ 바꾸고 싶으면 전역 변수로 main 바깥에 해당 변수 입력하면 될 것으로 보임.
+
+22번 문제 : 
+cout에서 소숫점 제한 방법 fixed랑 setprecision(n) 사용하면 됨, 그냥 변경은 *10^n -> /10^n을 해도 되지만 출력에서 필요하면 더 간단함. -> 이거 쓰면 이후에 소숫점이 가능한 숫자들은 전부 xx.00처럼 뜨는데, 이거 취소하기 위해 defaultfloat 사용하면 됨.
+-> 추가로 계산 과정이 float a = (7 - 4) / 2하면 a = 1이 나오는 에러 발생해서 float a = (7 - 4); a /= 2로 순차적 계산해야 a = 1.5가 나옴 (전자는 int / int 형태가 되기 때문에 int 값이 도출되는 원리, 후자는 float에 int값이 저장된 것이지 type은 float / int라서).
++) 사용하고 해제 방법 아직 잘 모르겠음. 뒤에 .000 안 쓰고 싶으면 정수형에 저장해서 출력할 것 -> int, size_t 등은 정수형이라 .000 안 나옴.
++) fixed 해제 방법 : std::cout.unsetf(std::ios::fixed) 이라고 함.
+
+23번 문제 : 
+정수끼리 나눗셈 소숫점 얻고 싶으면 static_cast<변경 예정type> (변경할 대상) 이용하면 안전하게 형변환 가능함.
++) string <-> int 변환 to_string, stoi 사용해야 함.
+
+24번 문제 : 
+3개 이상의 대상에 min, max 사용하려면 배열에 max_element(a, a+3)함수를 이 예시처럼 사용해야 함. 아니면 max({a, b, c}) 처럼 따로 {} 하든지
+-> 주의점은 그러면 주소 반환해서 앞에 '*' 붙여야 값 반환함.
+
+25번 문제 : 
+void 함수로 cout 하게 하고 그걸 cout << func() 하면 return 값이 없어서 작동 안 함.
+
+26번 문제 : 
+C++ gcd는 내장 함수 어떻게 가져올 수 있지만 lcm은 안 됨, 그래서 a*b/(gcd(a,b)로 구해야 함 -> #include <numeric> 이용하면 gcd는 가능.
+
+27번 문제 : 
+sum 함수 대신 accumulate(k.begin(), k.end(), 0)으로 배열의 합 구할 수 있음 -> #include <numeric> 사용해야 함, 뒤에 0은 0 + k[0] + .... k[n]으로 초기값 설정.
+
+28번 문제 : 
+문자열 저장 string 사용 안 하고 배열에 저장하는 경우 const char* date[] = {"MON", "TUE"} 처럼 해야 함.
+
+29번 문제 : 
+string 문자 길이 구하기 -> 이름.length() 하면 됨. string 일부 추출(비교) -> 이름.substr(시작점, 길이)하면 됨.
+
+30번 문제 : 
+연속된 입력에서 '\n' 무시하기 위해 cin에서는 cin.ignore() 하면 됨.
+
+31번 문제 : 
+vector 입력할 때 vector<int> a는 a.push_back({p, q}); (p, q에 따로 넣고) 해야 하고 (아직 크기가 정해지지 않은 관계로), vector<int> a(10)은 cin >> a[i] 해도 됨. -> 미리 크기 설정 여부에 따른 차이.
+
+32번 문제 : 
+sort(a.begin(), a.end(), func) -> 여기서 func는 내가 작성 가능, type은 bool(bool func() {};)로 해야 함
+
+33번 문제 : 
+배열 크기 너무 크게 하면 vscode 못 버티고 에러남 (ex) 백만) -> 전역 변수로 설정하면 가능.
++) int arr[100] = {}; 하면 전부 0이 옴. 배열 초기화 fill_n(arr, 초기화_배열_개수, 초기화값) 으로 초기화 가능. 이중 배열의 경우 arr[a][b]는 a*b로 크기 설정. (이때 n차원 배열 : arr[1][2]..[n-1]개 만들어야 함 = 1차원은 안 적어도 됨 -> "변경하려는 원소의 시작 주소"를 적어야 하기 때문에)
++) fill도 있음, fill 이중 배열 arr[5][5]이라면 전부 초기화의 경우fill(arr[0], arr[5], 숫자) 하면 됨.
+
+34번 문제 : 
+while 안에 있는 switch, case에서 break하면 switch가 끝남, 밖에 while이 끝나는 거 아님.
+
+35번 문제 : 
+sort에 이중 array와 같은 모양으로 최외곽이 array의 경우 에러 발생 -> vector로 대체하면 됨.
+
+36번 문제 : 
+long long 초과하는 숫자 배열에 각 자릿수 저장 / string으로 -> 배열이 시간 더 적게 걸리는 거 같음.
+
+37번 문제 : 
+이중 배열 (int arr [10][10]) 모양 함수의 인자로 넣어서 값 바꾸기 -> int (*arr)[10]처럼 입력해야 함.
+
+38번 문제 : 
+백준 11286번 operator 함수 사용해서 기호 재정의 내림 방식 참고 -> 2-1 고프 느낌.
+
+39번 문제 : 
+priority_queue -> 우선순위 자동 배열되는 queue -> ex) priority_queue<int, vector<int>, greater<int>> pq; 처럼 사용 -> 이건 작은 거가 top.
+
+40번 문제 : 
+재귀 함수 = while문 + queue 이용하면 비슷하게 가능함.
++) 재귀 함수(백트래킹) 시 함수 재귀 도중에 원하는 값 얻고 즉시 출력 & 종료 원하면 -> 출력하고, exit(0)을 하면 재귀 이전 함수들(+main까지) 안 돌아가고 바로 종료됨.
+
+41번 문제 : 
+string(숫자, char) -> 이 형태로 char를 여러번 반복하게 복제 가능 (ex) string(3, 'a') = "aaa"가 됨)
+
+42번 문제 : 
+C++에서 함수 void solve(int arr[5][5]) 처럼 array가 인자로 들어가게 되면 자동으로 복사본 생성 & 투입이 되는 것이 아니라 포인터로 전달이 되기 때문에 원본이 들어감 -> 원본은 유지하고 싶으면 그 전에 int ar[5][5] = arr;을 하고, solve(ar)로 복사본을 넣어야 함.
+
+43번 문제 : 
+array 복사할 때 memcpy(덮어씌울 array, 덮을 내용 있는 array. sizeof(array))로 해야 함
++) sizeof 의미 = array가 5 * 5, type long long이면 5 * 5 * 8 -> fill_n() 처럼 5*5로 끝이 아님 주의.
+
+44번 문제 : 
+swap(a, b)하면 a와 b의 값이 바뀜 -> c = a, a = b, b = c를 알아서 해준다는 의미.
+
+45번 문제 : 
+struct를 만들고, pq를 사용하려면 만든 struct안에 operator overloading을 해야 greater<> 사용 가능함.
++) greater<>를 사용하려면 비교 연산 위해 함수 객체 (aka struct)가 필요해서 윗 방식 꼭 사용해야 함.
+
+46번 문제 :
+transform(s.begin(), s.end(), s.begin(), func_name); 으로 s의 처음부터 끝까지, func를 적용해서 s.begin()부터 덮어씌우라고 요청하는 함수.
+
+47번 문제 : 
+이분 탐색 1. 그냥 순수 최소 : mid = (start + end) / 2; 랑 sum < n ? start = mid + 1 : end = mid; 사용.
+	      2. 최소 중 최대 : mid = (start + end + 1) / 2; 랑 cnt > n ? end = mid - 1 : start = mid; 로 end방향으로 유도 느낌
