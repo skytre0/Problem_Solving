@@ -1,0 +1,18 @@
+#include <bits/stdc++.h>
+#define ll long long
+
+using namespace std;
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+    vector<int> v;
+    int a, b;
+    cin >> a;
+    while (a--) {
+        cin >> b;
+        v.push_back(b);
+    }
+    cout << *min_element(v.begin(), v.end()) << " " << *max_element(v.begin(), v.end());
+    return 0;
+}
